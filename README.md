@@ -1,5 +1,7 @@
 # AWS S3 bucket Terraform module
 
+*TODO - Update Readme*
+
 Terraform module which creates S3 bucket on AWS with all (or almost all) features provided by Terraform AWS provider.
 
 This type of resources are supported:
