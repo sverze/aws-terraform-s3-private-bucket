@@ -119,10 +119,42 @@ module "s3_bucket" {
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
-## Authors
+## Testing
 
-Module managed by [Anton Babenko](https://github.com/antonbabenko).
+### Install requirements
 
-## License
+Terratest uses the Go testing framework. To use Terratest, you need to install:
 
-Apache 2 Licensed. See LICENSE for full details.
+- [Go](https://golang.org/) (requires version >=1.13)
+
+
+### Setting up your project
+
+The easiest way to get started with Terratest is to copy one of the examples and its corresponding tests from this
+repo. This quick start section uses a Terraform example, but check out the [Examples](#examples) section for other
+types of infrastructure code you can test (e.g., Packer, Kubernetes, etc).
+
+1. Create an `examples` and `test` folder.
+
+1. Copy all the files from the [basic terraform example](/examples/terraform-basic-example) into the `examples` folder.
+
+1. Copy the [basic terraform example test](/test/terraform_basic_example_test.go) into the `test` folder.
+
+1. To configure dependencies, run:
+
+    ```bash
+    cd test
+    go mod init "<MODULE_NAME>"
+    ```
+
+    Where `<MODULE_NAME>` is the name of your module, typically in the format
+    `github.com/<YOUR_USERNAME>/<YOUR_REPO_NAME>`.
+
+1. To run the tests:
+
+    ```bash
+    cd test
+    go test -v -timeout 30m
+    ```
+
+    *(See [Timeouts and logging](#timeouts-and-logging) for why the `-timeout` parameter is used.)*
