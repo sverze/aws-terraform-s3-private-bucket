@@ -2,8 +2,6 @@
 
 Configuration in this directory creates S3 bucket in one region and configures CRR to another bucket in another region.
 
-Please check [complete example](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/tree/master/examples/complete) to see all other features supported by this module.
-
 ## Usage
 
 To run this example you need to execute:

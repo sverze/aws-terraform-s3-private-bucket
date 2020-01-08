@@ -1,4 +1,4 @@
-# Complete S3 bucket with most of supported features enabled
+# Complete S3 private bucket with most supported features enabled
 
 Configuration in this directory creates S3 bucket which demos such capabilities:
 - static web-site hosting
@@ -9,21 +9,25 @@ Configuration in this directory creates S3 bucket which demos such capabilities:
 - server-side encryption
 - object locking
 
-Please check [S3 replication example](https://github.com/terraform-aws-modules/terraform-aws-s3-bucket/tree/master/examples/complete) to see Cross-Region Replication (CRR) supported by this module.
-
 ## Usage
 
 To run this example you need to execute:
 
 ```bash
 $ terraform init
-$ terraform plan
-$ terraform apply
+$ terraform plan -var "region=eu-west-1"
+$ terraform apply -var "region=eu-west-1"
 ```
 
 Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| profile | The AWS profile to use to authenticate using the AWS API | string | "default" | yes |
+| region | The AWS region this bucket should reside in | string | | yes |
+
 ## Outputs
 
 | Name | Description |
@@ -36,5 +40,3 @@ Note that this example may create resources which cost money. Run `terraform des
 | this\_s3\_bucket\_region | The AWS region this bucket resides in. |
 | this\_s3\_bucket\_website\_domain | The domain of the website endpoint, if the bucket is configured with a website. If not, this will be an empty string. This is used to create Route 53 alias records. |
 | this\_s3\_bucket\_website\_endpoint | The website endpoint, if the bucket is configured with a website. If not, this will be an empty string. |
-
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -1,10 +1,10 @@
-
 provider "aws" {
   region                  = var.region
+  profile                 = var.profile
 }
 
 locals {
-  bucket_name           = "s3-bucket-${random_pet.this.id}"
+  bucket_name             = "s3-bucket-${random_pet.this.id}"
 }
 
 resource "random_pet" "this" {
@@ -19,6 +19,7 @@ resource "aws_kms_key" "objects" {
 module "s3_bucket" {
   source                  = "../../"
   region                  = var.region
+  profile                 = var.profile
   bucket                  = local.bucket_name
   force_destroy           = true
   kms_master_key_id       = aws_kms_key.objects.arn
@@ -114,7 +115,18 @@ module "s3_bucket" {
       }
     },
   ]
+}
 
+module "log_bucket" {
+  source                  = "../../"
+  region                  = var.region
+  profile                 = var.profile
+  bucket                  = "logs-${local.bucket_name}"
+  acl                     = "log-delivery-write"
+  force_destroy           = true
+  attach_elb_log_delivery_policy = true
+  kms_master_key_id       = aws_kms_key.objects.arn
+  sse_algorithm           = "aws:kms"
   object_lock_configuration = {
     object_lock_enabled   = "Enabled"
     rule = {
@@ -124,15 +136,4 @@ module "s3_bucket" {
       }
     }
   }
-}
-
-module "log_bucket" {
-  source                  = "../../"
-  region                  = var.region
-  bucket                  = "logs-${local.bucket_name}"
-  acl                     = "log-delivery-write"
-  force_destroy           = true
-  attach_elb_log_delivery_policy = true
-  kms_master_key_id       = aws_kms_key.objects.arn
-  sse_algorithm           = "aws:kms"
 }
