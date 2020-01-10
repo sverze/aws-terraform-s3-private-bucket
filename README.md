@@ -37,7 +37,8 @@ The following actions can be performed
   s3:GetObject
   s3:PutObject
   s3:DeleteObject
-]
+  s3:GetObjectVersion
+  s3:GetObjectVersionAcl
 ```
 
 by the following principals

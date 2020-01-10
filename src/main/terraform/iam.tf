@@ -1,21 +1,22 @@
-resource "aws_iam_role" "bucket_role" {
-  count = var.attach_elb_log_delivery_policy ? 0 : 1
+data "aws_iam_policy_document" "bucket-assume-role-policy" {
+  statement {
+    actions       = ["sts:AssumeRole"]
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
+    principals {
+      type        = "Service"
+      identifiers = [
+        "ec2.amazonaws.com",
+        "s3.amazonaws.com"
+      ]
     }
-  ]
+
+    effect        = "Allow"
+    sid           = ""
+  }
 }
-EOF
+
+resource "aws_iam_role" "bucket_role" {
+  assume_role_policy = data.aws_iam_policy_document.bucket-assume-role-policy.json
 }
 
 data "aws_iam_policy_document" "bucket_policy" {
@@ -24,14 +25,20 @@ data "aws_iam_policy_document" "bucket_policy" {
   statement {
     principals {
       type        = "AWS"
-      identifiers = [aws_iam_role.bucket_role[0].arn]
+      identifiers = [aws_iam_role.bucket_role.arn]
     }
 
     actions = [
       "s3:ListBucket",
       "s3:GetObject",
       "s3:PutObject",
-      "s3:DeleteObject"
+      "s3:DeleteObject",
+      "s3:GetObjectVersion",
+      "s3:GetObjectVersionAcl",
+      "s3:ReplicateObject",
+      "s3:ReplicateDelete",
+      "s3:ReplicateObject",
+      "s3:GetReplicationConfiguration"
     ]
 
     resources = [
@@ -57,19 +64,19 @@ data "aws_iam_policy_document" "elb_log_delivery_policy" {
       identifiers = data.aws_elb_service_account.elb_log_delivery_account.*.arn
     }
 
-    effect = "Allow"
+    effect        = "Allow"
 
-    actions = [
+    actions       = [
       "s3:PutObject",
     ]
 
-    resources = [
+    resources     = [
       "arn:aws:s3:::${aws_s3_bucket.this.id}/*",
     ]
   }
 }
 
 resource "aws_s3_bucket_policy" "this" {
-  bucket = aws_s3_bucket.this.id
-  policy = var.attach_elb_log_delivery_policy ? data.aws_iam_policy_document.elb_log_delivery_policy[0].json : data.aws_iam_policy_document.bucket_policy[0].json
+  bucket          = aws_s3_bucket.this.id
+  policy          = var.attach_elb_log_delivery_policy ? data.aws_iam_policy_document.elb_log_delivery_policy[0].json : data.aws_iam_policy_document.bucket_policy[0].json
 }

@@ -136,16 +136,16 @@ resource "aws_s3_bucket" "this" {
     for_each = length(keys(var.replication_configuration)) == 0 ? [] : [var.replication_configuration]
 
     content {
-      role = replication_configuration.value.role
+      role          = aws_iam_role.bucket_role.arn
 
       dynamic "rules" {
-        for_each = replication_configuration.value.rules
+        for_each    = replication_configuration.value.rules
 
         content {
-          id       = lookup(rules.value, "id", null)
-          priority = lookup(rules.value, "priority", null)
-          prefix   = lookup(rules.value, "prefix", null)
-          status   = lookup(rules.value, "status", null)
+          id        = lookup(rules.value, "id", null)
+          priority  = lookup(rules.value, "priority", null)
+          prefix    = lookup(rules.value, "prefix", null)
+          status    = lookup(rules.value, "status", null)
 
           dynamic "destination" {
             for_each = length(keys(lookup(rules.value, "destination", {}))) == 0 ? [] : [lookup(rules.value, "destination", {})]
