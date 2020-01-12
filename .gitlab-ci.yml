@@ -5,3 +5,11 @@ image:
 before_script:
   - terraform --version
   - go version
+
+stages:
+  - validate
+
+validate:
+  stage: validate
+  script:
+    - terraform validate
