@@ -5,7 +5,6 @@ image:
 before_script:
   - terraform version
   - go version
-  - cd src/main/terraform/
 
 stages:
   - validate
@@ -13,4 +12,5 @@ stages:
 validate:
   stage: validate
   script:
+    - cd src/main/terraform/
     - terraform validate
