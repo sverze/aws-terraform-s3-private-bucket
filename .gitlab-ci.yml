@@ -1,5 +1,8 @@
 image: golang:1.13.5
 
+services:
+  - terraform:latest
+
 variables:
   REPO: github.com
   GROUP: sverze
