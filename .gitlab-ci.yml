@@ -1,15 +1,20 @@
-# Replace "projectname" and "username"
-image:
-  name: hashicorp/terraform:light
+image: golang:1.13.5
 
-before_script:
-  - terraform --version
-  - go version
+variables:
+  REPO: github.com
+  GROUP: sverze
+  PROJECT: aws-terraform-s3-private-bucket
 
 stages:
-  - validate
+ - test
 
-validate:
-  stage: validate
+before_script:
+  - mkdir -p $GOPATH/src/$REPO/$GROUP $GOPATH/src/_/builds
+  - cp -r $CI_PROJECT_DIR $GOPATH/src/$REPO/$GROUP/$PROJECT
+  - ln -s $GOPATH/src/$REPO/$GROUP $GOPATH/src/_/builds/$GROUP
+  - go get -v -d ./...
+
+unit_tests:
+  stage: test
   script:
-    - terraform validate
+    - go test -v ./... -coverprofile .testCoverage.txt
