@@ -3,7 +3,7 @@ image:
   name: hashicorp/terraform:light
 
 before_script:
-  - terraform --version
+  - terraform -version
   - go version
 
 stages:
