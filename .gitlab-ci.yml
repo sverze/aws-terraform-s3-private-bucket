@@ -1,0 +1,7 @@
+# Replace "projectname" and "username"
+image:
+  name: hashicorp/terraform:light
+
+before_script:
+  - terraform --version
+  - go version
