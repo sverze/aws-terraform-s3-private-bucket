@@ -14,7 +14,7 @@ before_script:
   - ln -s $GOPATH/src/$REPO/$GROUP $GOPATH/src/_/builds/$GROUP
   - go get -v -d ./...
 
-unit_tests:
+integration_tests:
   stage: test
   script:
     - go test -v ./... -coverprofile .testCoverage.txt
