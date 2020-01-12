@@ -17,4 +17,5 @@ before_script:
 integration_tests:
   stage: test
   script:
+    - go mod init "$REPO/$GROUP/$PROJECT"
     - go test -v ./... -coverprofile .testCoverage.txt
